@@ -1,0 +1,16 @@
+# ══ 密钥与配置——绝不进仓库（.env 里有真实 API key）══
+.env
+
+# ══ Python 运行垃圾 ══
+__pycache__/
+*.pyc
+.venv/
+
+# ══ 运行时数据（程序自己会重写，不属于代码）══
+ai/history.json
+
+# ══ IDE 配置 ══
+.vscode/
+
+# ══ 参考资料（clone 的外部仓库，版权原因不进自己的仓库）══
+refs/
