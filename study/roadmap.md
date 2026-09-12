@@ -1,6 +1,7 @@
 # 求职路线图（2026-09 → 2027-03 跳槽中小厂）
 
 > 信息截至 **2026-09-03**（依据当日联网搜索校准，规则见 [AGENTS.md](AGENTS.md) 规则 1；每月底复盘时必须重新搜索校准）。
+> ※ 2026-09-11 增补校准：**新增「深度学习基础 + PyTorch」模块**（依据：1127 份 AI 工程师 JD 统计，PyTorch 出现率 67.8% 且同比上升；2026-08/09 多个中文 JD 要求「熟悉 CNN/Transformer/深度学习基础 + 能用 PyTorch 独立训练模型」），1 月主线重排、Docker 部署提前到 12 月末。
 > 主目标：**AI 应用开发工程师**（LLM 应用 / RAG / Agent / MCP）
 > 长期方向：AI 算法工程师（入职后补数学与 ML 理论再转）
 > 竞争力公式：**Python 工程力 × 项目深度 × 算法题过关率**，三者缺一不可
@@ -43,9 +44,9 @@
 | 9月 | Python 地基 | 简单题推进（当前队列） | Python 语法关 + 50 题 |
 | 10月 | 工程能力：FastAPI + Git + SQL | 简单题收尾 → medium | 刷题工具 Web 化上线 |
 | 11月 | **LLM 应用：API + RAG**（API 段快过、手写为主 ※09-05） | medium 为主 | RAG 问答 demo |
-| 12月 | **项目深挖：Agent + 完善 RAG** | medium + 复试 | 简历级项目 1 个 |
-| 1月 | 微调入门 + 部署（Docker） | medium 稳定 | 项目可在线访问 |
-| 2月 | 八股 + 简历 + 模拟面试 | 热题 100 复盘 | 简历定稿 |
+| 12月 | **项目深挖：Agent + 完善 RAG + 月末 Docker 上线 ※09-11** | medium + 复试 | 简历级项目上线可访问 |
+| 1月 | **深度学习基础 + PyTorch → LoRA 微调 ※09-11 重排** | medium 稳定 | 手写训练循环 + 微调小模型 |
+| 2月 | 微调收尾 + 八股 + 简历 + 模拟面试 | 热题 100 复盘 | 简历定稿 |
 | 3月 | 投递 + 面试 | 手撕题保温 | 拿 offer |
 
 ## 分阶段细节
@@ -69,8 +70,8 @@
 ### 阶段 2（11~12月）：Agent 与 MCP 深化（求职主武器）※ 已按 2026-09 搜索校准
 
 - ※ 2026-09-05 增补（动手短板对策）：**11 月 LLM 应用线改为"手写驱动"**——API 调用概念你已有底子（first_call.py + 课程 1~5 章），不再从零讲 API；直接从 chatbot.py v1（9/6 开工）连续演进：多轮对话 → 异常容错 → JSON 持久化 → 收编成类。每步先自己写，卡住才看最小修正。省下的讲解时间全投给 RAG 手写（rag.py 是全新知识，第 8 章你没学过，按原计划深学）
-- 11月：**LangGraph 深学**：streaming、human-in-the-loop、`create_agent` + middleware、子图/多 Agent 编排；**agentic RAG**（Agent 自主决定何时检索、多轮检索、Reflection 自检）；**Context Engineering** 实践（上下文压缩、分层记忆）
-- 12月：**MCP 深化**：SSE/HTTP 远程传输、Resources、多 Server 组合；把 10 月的刷题助手升级为完整 Agent 项目；RAG 评测入门（召回率/忠实度类指标）
+- 11月：**LangGraph 深学**：streaming、human-in-the-loop、`create_agent` + middleware、子图/多 Agent 编排；**agentic RAG**（Agent 自主决定何时检索、多轮检索、Reflection 自检）；**Context Engineering** 实践（上下文压缩、分层记忆）；RAG 开工前先看 3Blue1Brown 深度学习第 5~7 章（见阶段 3 资源区）
+- 12月：**MCP 深化**：SSE/HTTP 远程传输、Resources、多 Server 组合；把 10 月的刷题助手升级为完整 Agent 项目；RAG 评测入门（召回率/忠实度类指标）；**月末 Docker 部署提前**（※ 2026-09-11：项目一成形就打包上线，把 1 月的窗口让给 DL/PyTorch）
 - **练手项目（简历主打）**：**错题本知识库问答 Agent 版**——手写 rag.py（9月末产物）+ LangGraph 编排 + MCP 工具 + agentic 检索。面试叙事："从 naive RAG 手写演进到 agentic 架构"——这比直接调框架高一个段位
 - **项目深度层（2026-09-04 校准：面试官四大通病 = 功能堆砌 / 聊不出 trade-off / 场景同质化 / 验证不闭环；19 场面试 15 场追问 RAG 项目细节）**：
   - **评测闭环**：构造 20~50 条评测集，量化检索命中率 + 回答忠实度（RAGAS 思路）——简历写"有基线对比的指标"，这是与 90% 候选人的分水岭
@@ -80,17 +81,27 @@
 - 面试八股储备：ReAct / Plan-and-Execute / Reflection 三范式、MCP vs Skill vs A2A、RAG 全链路（切块/召回/重排/评测）、幻觉缓解四层、多轮对话三大痛点（上下文混乱/状态爆炸/意图漂移）
 - 算法线：medium 比例按 plan.md 阶段 B 提升
 
-### 阶段 3（1月）：加"算法味" + 上线
+### 阶段 3（1月）：深度学习基础 + PyTorch → 微调 ※ 2026-09-11 重排
 
-- **微调入门**：transformers 库 + LoRA/PEFT，用免费算力（Colab/Kaggle）微调一个小模型做分类或风格模仿（不用买卡）
-- **部署**：Docker 打包 + 云服务器（最便宜的轻量云即可）让项目在线可访问——简历里"可访问链接"比截图值钱
-- **GraphRAG 概念**（知识图谱检索，知道适用场景即可，不必深做）+ Agent 可观测性/评测概念
-- ML 基础概念八股开始过一遍（过拟合、评估指标、常见模型是干什么的）
+> 为什么加：1127 份 AI 工程师 JD（2025-01~2026-05）中 PyTorch 出现率 67.8% 且同比上升；2026-08/09 多个中文 JD 明确要求「熟悉深度学习基础（CNN/Transformer）+ 能用 PyTorch 独立训练模型」。原路线把 PyTorch 隐含在微调里，没地基会导致微调只能抄代码、面试讲不清。**定位是"应用级"**：支撑微调 + 面试能讲清原理，不是算法研究员级。
+
+- 上半月 **PyTorch 最小核心（动手为主）**：张量操作 → autograd → nn.Module → 训练五步（数据→模型→损失→优化器→循环）→ DataLoader → GPU
+  - 检验标准（沿用"遮罩重写"策略）：不看资料手写一个 MNIST/小型数据集分类训练脚本，并能逐行解释
+- 同步 **DL 概念八股**：损失函数/梯度下降、CNN 概念、RNN 为何被 Transformer 取代、**Transformer 与 attention（重点，面试必问，与 RAG/LLM 线直接呼应）**、过拟合与正则化、评估指标（原"ML 八股"并入此处）
+- 下半月 **微调实战**（原计划保留，现在有地基）：transformers + LoRA/PEFT，免费算力（Colab/Kaggle）微调一个小模型做分类或风格模仿（不用买卡）；收尾可溢出到 2 月初
+- **不学清单（防学过深）**：数学推导细节、手写反向传播、CV/NLP 大而全课程、论文精读——这些是算法岗的活，你的目标是"看懂训练代码 + 讲得清原理"
+- **资源（选一主线，别贪多）**：李沐《动手学深度学习 v2》选章（中文首选，B 站）或 Karpathy Zero to Hero 前几集（跟写型，英文）；PyTorch 官方教程 Learn the Basics
+- **3Blue1Brown 神经网络系列（直觉铺垫，先看）**：B 站官方号 https://space.bilibili.com/88461692 搜「深度学习」合集（中文双语）；官网文字版 https://www.3blue1brown.com/topics/neural-networks
+  - 第 1~4 章（约 1.5h）：神经网络结构 / 梯度下降 / 反向传播直观 / 反向传播微积分（第 4 章选看，看不懂数学属正常，"不学清单"已排除手写推导）——1 月 DL 周开看
+  - 第 5~7 章（约 1.5h）：Transformers 结构与词嵌入 / 注意力机制 QKV / LLM 如何存储事实——**11 月 RAG 开工前看**，attention/embedding 与向量检索直接呼应
+  - YouTube 备用：https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi
+- 部署已提前到 12 月末（见阶段 2）
 
 ### 阶段 4（2月）：求职冲刺
 
+- 第一周：微调收尾（若 1 月溢出），微调项目写进简历
 - 简历：项目用"背景-动作-结果"写法，每个项目能被追问 3 层
-- 八股清单：Python 高频（GIL、装饰器、生成器）、SQL、LLM 原理（attention 能讲出大意、RAG 流程倒背如流）、微调 vs RAG 的取舍
+- 八股清单：Python 高频（GIL、装饰器、生成器）、SQL、LLM 原理（attention 能讲出大意、RAG 流程倒背如流）、微调 vs RAG 的取舍、GraphRAG/Agent 可观测性概念（知道适用场景即可）
 - 算法：热题 100 的 easy+medium 保温，中小厂手撕题难度到不了 hard
 - 模拟面试：让我扮演面试官按你的简历追问
 

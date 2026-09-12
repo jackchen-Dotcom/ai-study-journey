@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>闪刷 FlashQuiz</title>
+<style>
+  :root {
+    --ink: #1e1b4b; --sub: #6b7280; --line: #e5e7eb;
+    --accent: #4f46e5; --accent-soft: #eef2ff;
+    --ok: #059669; --ok-bg: #ecfdf5; --ok-line: #a7f3d0;
+    --bad: #dc2626; --bad-bg: #fef2f2; --bad-line: #fecaca;
+    --gold: #d97706;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    margin: 0; color: var(--ink); min-height: 100vh;
+    background: linear-gradient(160deg, #eef2ff 0%, #f8fafc 45%, #fdf4ff 100%);
+  }
+  .wrap { max-width: 580px; margin: 0 auto; padding: 18px 16px 40px; }
+
+  header { display: flex; align-items: center; justify-content: space-between; margin: 6px 2px 14px; }
+  .logo { font-size: 22px; font-weight: 800; letter-spacing: .5px;
+          background: linear-gradient(90deg, #4f46e5, #a855f7);
+          -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .tagline { color: var(--sub); font-size: 12px; }
+
+  nav { display: flex; gap: 8px; margin-bottom: 14px; }
+  nav button {
+    flex: 1; padding: 11px 4px; border: 1px solid var(--line); border-radius: 12px;
+    background: rgba(255,255,255,.8); font-size: 14px; font-weight: 600;
+    color: var(--ink); cursor: pointer; transition: all .15s ease;
+  }
+  nav button:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(79,70,229,.12); }
+  nav button.active {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #fff; border-color: transparent;
+    box-shadow: 0 6px 16px rgba(79,70,229,.28);
+  }
+  .badge {
+    display: inline-block; min-width: 20px; padding: 1px 6px; margin-left: 3px;
+    border-radius: 999px; background: #ef4444; color: #fff; font-size: 11px; font-weight: 700;
+  }
+  nav button.active .badge { background: rgba(255,255,255,.28); }
+  .badge.zero { background: #10b981; }
+
+  .card {
+    background: rgba(255,255,255,.92); backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,.6); border-radius: 18px;
+    padding: 20px; min-height: 260px;
+    box-shadow: 0 10px 30px rgba(30,27,75,.08);
+    animation: fadeUp .3s ease;
+  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  .toprow { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .meta { color: var(--sub); font-size: 12px; }
+  .chip {
+    font-size: 12px; font-weight: 700; color: var(--accent);
+    background: var(--accent-soft); border-radius: 999px; padding: 3px 10px;
+  }
+  .stem { white-space: pre-wrap; line-height: 1.7; font-size: 15px; }
+
+  .opt {
+    display: flex; align-items: flex-start; gap: 10px; width: 100%; text-align: left;
+    margin-top: 10px; padding: 12px 14px;
+    border: 1.5px solid var(--line); border-radius: 12px; background: #fff;
+    font-size: 14px; line-height: 1.55; cursor: pointer; transition: all .15s ease;
+  }
+  .opt:hover:not(:disabled) { border-color: #c7d2fe; background: var(--accent-soft); transform: translateX(3px); }
+  .opt:disabled { cursor: default; }
+  .opt .key {
+    flex: none; width: 24px; height: 24px; border-radius: 8px; margin-top: 1px;
+    background: var(--accent-soft); color: var(--accent);
+    font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center;
+  }
+  .opt.correct { border-color: var(--ok-line); background: var(--ok-bg); }
+  .opt.correct .key { background: var(--ok); color: #fff; }
+  .opt.wrong { border-color: var(--bad-line); background: var(--bad-bg); }
+  .opt.wrong .key { background: var(--bad); color: #fff; }
+  .opt.dim { opacity: .45; }
+
+  textarea {
+    width: 100%; min-height: 96px; margin-top: 14px; padding: 12px;
+    border: 1.5px solid var(--line); border-radius: 12px; font-size: 14px;
+    font-family: inherit; resize: vertical; line-height: 1.6;
+  }
+  textarea:focus { outline: none; border-color: #a5b4fc; box-shadow: 0 0 0 3px var(--accent-soft); }
+
+  .primary {
+    display: block; width: 100%; margin-top: 14px; padding: 13px;
+    border: 0; border-radius: 12px; cursor: pointer;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff;
+    font-size: 15px; font-weight: 700; letter-spacing: 1px;
+    box-shadow: 0 6px 16px rgba(79,70,229,.28); transition: all .15s ease;
+  }
+  .primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(79,70,229,.36); }
+  .primary:disabled { opacity: .6; }
+
+  #feedback { margin-top: 16px; animation: fadeUp .25s ease; }
+  .verdict {
+    display: flex; align-items: center; gap: 8px;
+    border-radius: 12px; padding: 10px 14px; font-weight: 700; font-size: 14px;
+  }
+  .verdict.ok  { background: var(--ok-bg);  border: 1px solid var(--ok-line);  color: var(--ok); }
+  .verdict.bad { background: var(--bad-bg); border: 1px solid var(--bad-line); color: var(--bad); }
+  .verdict .score {
+    margin-left: auto; font-size: 12px; background: #fff; border-radius: 999px; padding: 2px 10px;
+  }
+  .ai-note { margin-top: 8px; font-size: 13px; line-height: 1.6; color: #374151; }
+  .block {
+    margin-top: 10px; padding: 12px 14px; border-radius: 12px;
+    background: #f8fafc; border-left: 3px solid var(--accent);
+    font-size: 13.5px; line-height: 1.7; white-space: pre-wrap;
+  }
+  .block .label { font-weight: 800; color: var(--accent); font-size: 12px;
+                  display: block; margin-bottom: 4px; letter-spacing: 1px; }
+  .block.knowledge { border-left-color: var(--gold); background: #fffbeb; }
+  .block.knowledge .label { color: var(--gold); }
+  .due { margin-top: 10px; color: var(--sub); font-size: 12px; }
+
+  .empty { text-align: center; color: var(--sub); padding: 48px 0; font-size: 14px; }
+  .empty .big { font-size: 40px; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="logo">⚡ 闪刷 FlashQuiz</div>
+      <div class="tagline">你的坑，就是你的题库</div>
+    </div>
+    <div class="chip" id="session" style="display:none"></div>
+  </header>
+
+  <nav>
+    <button data-m="flash">闪刷 <span class="badge" id="b-flash">0</span></button>
+    <button data-m="radar">模式雷达 <span class="badge" id="b-radar">0</span></button>
+    <button data-m="external">外部题库 <span class="badge" id="b-external">0</span></button>
+  </nav>
+
+  <div class="card">
+    <div id="empty" class="empty">
+      <div class="big">🎯</div>
+      选一个板块，开始今天的第一刷
+    </div>
+    <div id="quiz" style="display:none">
+      <div class="toprow">
+        <div class="meta" id="meta"></div>
+        <div class="chip" id="counter"></div>
+      </div>
+      <div class="stem" id="stem"></div>
+      <div id="options"></div>
+      <textarea id="shortbox" style="display:none"
+                placeholder="先在脑子里默答，再把答案敲进来…（AI 会判分）"></textarea>
+      <button id="submit" class="primary" style="display:none">提交答案</button>
+      <div id="selfbtns" style="display:none">
+        <button class="ghost" onclick="selfGrade(true)">🙂 我答对了</button>
+        <button class="ghost" onclick="selfGrade(false)">😥 我答错了</button>
+      </div>
+      <div id="feedback"></div>
+      <button id="next" class="primary" style="display:none" onclick="loadNext()">下一题 →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let current = null;          // 当前题（来自 /api/next）
+let module = null;           // 当前板块
+let session = { total: 0, correct: 0, streak: 0 };
+
+async function refreshBadges() {
+  const r = await (await fetch('/api/due_counts')).json();
+  for (const m of ['flash', 'radar', 'external']) {
+    const el = document.getElementById('b-' + m);
+    el.textContent = r[m];
+    el.classList.toggle('zero', r[m] === 0);   // 清零变绿，有货变红
+  }
+}
+
+function updateCounter() {
+  const el = document.getElementById('counter');
+  if (session.total === 0) { el.style.display = 'none'; return; }
+  el.style.display = 'inline-block';
+  el.textContent = `本轮 ${session.total} 题 · 连对 ${session.streak}`;
+}
+
+async function loadNext(m) {
+  if (m) { module = m; session = { total: 0, correct: 0, streak: 0 }; }
+  document.querySelectorAll('nav button').forEach(b =>
+    b.classList.toggle('active', b.dataset.m === module));
+  const r = await (await fetch('/api/next/' + module)).json();
+  refreshBadges();
+
+  document.getElementById('empty').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  document.getElementById('feedback').innerHTML = '';
+  document.getElementById('selfbtns').style.display = 'none';
+  document.getElementById('next').style.display = 'none';
+  document.getElementById('shortbox').style.display = 'none';
+  document.getElementById('submit').style.display = 'none';
+  document.getElementById('options').innerHTML = '';
+  updateCounter();
+
+  if (!r.question) {
+    document.getElementById('meta').textContent = '';
+    document.getElementById('stem').textContent = '该板块暂无题目';
+    return;
+  }
+  current = r.question;
+  document.getElementById('meta').textContent =
+    current.source + ' · 本板块到期 ' + r.due_count;
+  document.getElementById('stem').textContent = current.stem;
+
+  if (current.qtype === 'choice') {
+    const letters = 'ABCD';
+    current.options.forEach((text, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'opt';
+      btn.innerHTML = `<span class="key">${letters[i]}</span><span>${text}</span>`;
+      btn.onclick = () => answerChoice(text);
+      document.getElementById('options').appendChild(btn);
+    });
+  } else {
+    document.getElementById('shortbox').style.display = 'block';
+    document.getElementById('submit').style.display = 'block';
+    document.getElementById('shortbox').disabled = false;
+    document.getElementById('shortbox').value = '';
+  }
+  document.getElementById('submit').disabled = false;
+}
+
+function lockOptions(pickedText) {
+  document.querySelectorAll('.opt').forEach(b => {
+    b.disabled = true;
+    const text = b.querySelector('span:last-child').textContent;
+    if (text === pickedText) b.classList.add('wrong');
+    else if (!pickedText) b.classList.add('dim');
+  });
+}
+function markCorrectOption(answerText) {
+  document.querySelectorAll('.opt').forEach(b => {
+    const text = b.querySelector('span:last-child').textContent;
+    if (text === answerText) { b.classList.add('correct'); b.classList.remove('dim', 'wrong'); }
+    else if (!b.classList.contains('wrong')) b.classList.add('dim');
+  });
+}
+
+async function answerChoice(text) {
+  lockOptions(text);
+  const r = await (await fetch('/api/answer_choice', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({qid: current.id, picked: text})
+  })).json();
+  markCorrectOption(r.answer);
+  showFeedback(r);
+}
+
+async function submitShort() {
+  const text = document.getElementById('shortbox').value.trim();
+  const submit = document.getElementById('submit');
+  submit.disabled = true;
+  submit.textContent = '🤖 AI 判分中…';
+  const r = await (await fetch('/api/submit_short', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({qid: current.id, text: text})
+  })).json();
+  submit.textContent = '提交答案';
+
+  if (r.graded === 'self') {
+    document.getElementById('feedback').innerHTML =
+      '<div class="meta" style="margin-top:12px">🤖 AI 判分不可用，请对照标准答案自评</div>' +
+      '<div class="block"><span class="label">📌 标准答案</span>' + r.answer + '</div>';
+    document.getElementById('selfbtns').style.display = 'block';
+    document.getElementById('shortbox').disabled = true;
+    return;
+  }
+  document.getElementById('shortbox').disabled = true;
+  showFeedback(r);
+}
+
+async function selfGrade(correct) {
+  const r = await (await fetch('/api/self_grade', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({qid: current.id, correct: correct})
+  })).json();
+  document.getElementById('selfbtns').style.display = 'none';
+  showFeedback(r);
+}
+
+function showFeedback(r) {
+  session.total++;
+  session.streak = r.correct ? session.streak + 1 : 0;
+  updateCounter();
+
+  let head;
+  if (r.graded === 'ai') {
+    head = `<div class="verdict ${r.correct ? 'ok' : 'bad'}">
+              ${r.correct ? '🎉 AI 判分通过' : '🤖 AI 判分：有遗漏'}
+              <span class="score">${r.score} 分 · ${r.verdict}</span>
+            </div>
+            <div class="ai-note">${r.feedback || ''}</div>`;
+  } else if (r.graded === 'skipped') {
+    head = '<div class="verdict bad">⏭ 未作答，按未掌握处理</div>';
+  } else {
+    head = `<div class="verdict ${r.correct ? 'ok' : 'bad'}">
+              ${r.correct ? '✅ 答对了！' : '❌ 答错了'}</div>`;
+  }
+
+  let body = `<div class="block"><span class="label">📌 标准答案</span>${r.answer}</div>`;
+  if (r.explanation) {
+    body += `<div class="block knowledge"><span class="label">💡 知识点 · 来自你的总结</span>${r.explanation}</div>`;
+  }
+  body += `<div class="due">📅 下次见面：${r.next_due}${r.correct ? ' · 连对会拉长间隔' : ' · 答错明天再见'}</div>`;
+
+  document.getElementById('feedback').innerHTML = head + body;
+  document.getElementById('next').style.display = 'block';
+  refreshBadges();
+}
+
+document.querySelectorAll('nav button').forEach(b =>
+  b.addEventListener('click', () => loadNext(b.dataset.m)));
+document.getElementById('submit').addEventListener('click', submitShort);
+refreshBadges();
+</script>
+</body>
+</html>

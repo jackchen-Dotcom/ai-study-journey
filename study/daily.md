@@ -4,6 +4,29 @@
 > 用法：做完一项把 `[ ]` 改 `[x]`；没做标 `⏭`（自动顺延）；**每周日晚上对我说一声进度，我重排下周**。
 > 崩溃日保底方案：中午 1 题 + 睡前翻 10 分钟 patterns.md。保底不算中断。
 
+## 🎯 弹药库（试用期空档专用 · 9/11 建，每周日晚重排补新）
+
+> 用法：空档打开 → 按剩余时间取一条 → 做完打勾 → **每次只取一条，做完就收**。
+> 公司忙起来整体作废、零负担——赚到的每分钟都是纯利润，不许反向焦虑。
+
+### 15 分钟档（随时可断）
+- ☐ 背诵卡 3 张（遮 A 默答，答不上的标 ⬜）
+- ☐ 力扣 APP 重刷 1 道错题
+- ☐ requirements.txt 补 `pytest` 一行
+
+### 30 分钟档（小整块）
+- ☐ Prompt.py 字典坑修复（chatbot_prompt 是**字符串**不是字典：`json.loads()` 或改字典字面量）
+- ☐ README 写一节：项目介绍 / 快速开始 / 已知限制（三节凑齐 = 明日里程碑①提前完工）
+- ☐ 读 judge.py 20 行（Python 地基；卡住的行记下来晚上问）
+- ☐ 遮答案复写一道旧题（#206 / #19 白板重写 + 判题）
+
+### 60 分钟档（上午整块）
+- ☐ 3Blue1Brown 深度学习第 1 章（19min）+ 三行笔记
+- ☐ pytest 加餐：给 chat() 错误路径写第 4 个测试（先想：不联网怎么测？想不出晚上问）
+- ☐ patterns.md 补两条（用户执笔）：类名无括号=图纸、变量三权分立
+
+---
+
 ## 时间槽（沿用 roadmap.md）
 
 | 时段 | 时长 | 干什么 |
@@ -83,10 +106,53 @@
 - ☀️（缓冲日）**#92 反转链表 II MEDIUM ✅ 4 版通过**（9/10 晚磨 3 版卡接缝 → 9/11 定稿：三定位+两刀接缝；坑史见 notebook——==零循环/前驱缺失连坑两次/起点漏位）——硬核题单开张 ✓
 - 🌙 顺延账：**ChatBot 重构 ✅ 完成**（四方法 ChatBot 类：add_message/chat/save/load；self 全员上岗、return 替代 print、拼写修正、.env 补 MODEL=deepseek-chat；主程序 11 行 < 15 达标；跨会话记忆验收过）
   - 重构坑史：① chat 内写死全局 myllm = 实例串门风险（self 三连问重现，已修）② "model": "model" 字符串占位 bug ③ .env 缺 MODEL 键 → getenv 返 None（链式排查：代码→传参→配置源）
-- 🌙 Git 第一课（init → add → commit → 推 GitHub）⏭ 顺延今晚/9/12 与里程碑①合并——**前置警告：.env 含真实 key，必须先建 .gitignore 再 commit**
+- 🌙 **Git 第一课 ✅ 完成**（超出任务卡：init → .gitignore 安检 → root-commit c84ca54 45 文件 → 浏览器 OAuth 授权 → push 成功；完成标准"浏览器能看到仓库"达成）
+  - 排障坑史（6 连，全是实战级）：① .gitignore 只挡未跟踪文件——history.json 已 add 后改规则追不回，须 `git rm --cached` ② 嵌套仓库 refs/hello-agents（clone 的教程）→ gitignore 除名 ③ **全局幽灵配置**：.gitconfig 里 insteadOf 规则把所有 github.com 自动改写成 gh-proxy（加速教程残留）——排查钥匙：我写入的地址和 -v 显示不符 = 有重写 ④ PowerShell 反引号 = 续行符/URL 混入字符，幽灵字符三连 ⑤ unrelated histories → pull --allow-unrelated-histories --no-edit ⑥ 凭据管理器浏览器授权一次免密
+  - 教训沉淀：git 命令粘贴先瞄首尾；地址写入和显示不符时查 --get-regexp insteadof；官方排障 hint 的每个命令都要读懂再执行
+- 💭 **深度焦虑五连 → 收束**（9/11 晚，重要认知资产）：① 焦虑对象漂移（RAG 烂大街→chatbot 太浅→ReAct 才深→全部都浅→没人要）= 根源不是技术是心急 ② 资深评审法：他主动求狠评 → 9 条工程债清单（P0:3轮自杀/网络裸奔/无requirements/人设漂移；P1:token预算/硬编码/零测试/无日志/input裸奔）——**清单全在 roadmap 找得到还款日 = 路线被反向验证** ③ 生产级 = 学习态 + 工程化增量堆叠（规范×真实场景×可维护性三件齐）；hello-agents 是教程产品非生产系统，但其工程规范可当抄写模板 ④ 检验标准三问：自己在用吗→真实数据会被查吗→陌生人 5 分钟能跑吗 ⑤ 深度=穿透度不是行数；摇摆才是皮毛最大制造机，单线走到里程碑
+- 📌 **9/12 开工单 → 任务包制首发**（9/11 用户要求加大每日密度：核心任务 + 评审债抢跑，每晚 ~2h 满负荷；P1 债务在 9 月分摊消化，10 月 FastAPI/SQL 量级不动）：
+  1. P0 四连（~30min）：q 退出替代 3 轮自杀 / chat 网络异常 try/except（还 9/8 顺延账）/ requirements.txt / load 后检查 history[0] 人设
+  2. P1 抢跑①（~40min）：token 预算雏形——history 超 N 条触发滑动窗口截断（Context Engineering 第一课，从 10 月提前）
+  3. P1 抢跑②（~40min）：pytest 第一课——test_chatbot.py 三连测（save→load 往返原样 / add_message 计数 / 人设检查）
+  4. README（~30min）：照 hello-agents 骨架写
+  5. commit + push（~20min）：**脱拐跑，只给任务不给命令**
+  - ☀️ 上午照旧：错题复盘（#19/#35 三天法）+ 检查昨晚 JD 对照作业
+
+#### 9/11 下午 + 晚间抢跑单（开工单前置，P0 是债不是加餐）
+
+**下午·零碎时间（实习闲散专用）**：
+- ⬜ 背诵卡 3~5 张（重点翻：#92 三定位+两刀接缝、Git 六连坑）
+- ~~力扣 APP 重刷 #92~~ → **取消**（当天重刷太早，记忆未衰减验不出水平；三天法复写已排 9/14）
+
+**下午·整块时间（若有 ≥30min）**：
+- ✅ P0-1（3 版迭代）：q 退出替代 3 轮自杀——终版 `while 1` + `if user_input == "q": break`（判断在 chat 之前，q 不进 history）；坑史：① 首版 `while max_conver_len < 3 or q != "q"` 两坑叠加——q 未赋值先在条件里用 = NameError 崩（变量先赋值再进条件）+ or 方向反（or 一边真就继续，应 and）② 中间变量 q 冗余，直接判 user_input
+  - 待清：L49 `max_conver_len = 0` 成死代码
+- ✅ P0-2（5 版迭代）：chat() 网络异常 try/except——终版单 try 双 except：ConnectionError→网络提示 / HTTPError→key 错误提示，return 交还决策权（**还清 9/8 顺延账**）；坑链（异常处理最重一课）：① except 后接方法调用/数字 → NameError、TypeError（**except 接异常类名，类名 = traceback 冒号前**）② 把自己写错代码的 TypeError 诊断书误当 401 病名抄进去 ③ 裸 except 三犯（吞 Ctrl+C）④ break 进方法 = SyntaxError → return 交还决策权 ⑤ raise_for_status 必须罩进 try
+  - 待清：L52/L71 注释死代码、L55 max_conver_len 死代码、"api_key Error" 措辞（HTTPError 还含 429/500，不止 key 错）
+
+**晚 8 点后（~2h 满负荷）**：
+- ✅ P0-3（5min）：requirements.txt——`pip freeze > requirements.txt`（6 行：2 直接 + 4 传递依赖）；验收 `pip install -r` 全 already satisfied；坑：PowerShell 裸 `>` = UTF-16 编码（pip 能读但其他工具可能不认），`Out-File -Encoding utf8` 转 UTF-8
+- ✅ P0-4（15min）：load 后检查 history[0] 人设——`if myllm.history[0]["role"] != "system": myllm.history.insert(0, prompt)`（insert 塞队首 vs append 塞队尾）；伪代码→Python 一步到位
+  - 已知坑（P1 健壮性）：空 history `[]` → `history[0]` 触发 IndexError（FileNotFoundError 接不住），取索引前先判空
+- ✅ P1-①（~50min）：token 预算雏形（Context Engineering 第一课）——滑动窗口截断：`self.history = [self.history[0]] + self.history[-self.max_history:]`（保 system 头 + 最近 N-1 条）；max_history 提成 __init__ 参数（还"硬编码"债半条）；验收：len 封顶不再涨（N=5 实测稳 6 / N=10 机制同路）
+  - 坑史：① 切片不改原列表，`myllm.history[-5:]` 无接收者=蒸发（表达式必须有接收者）② 发送切片 [-5:] 把 system 切丢——人设丢失（截断要一刀保头，别"切丢再补"）③ [0]字典+[-5:]列表相加 TypeError（+ 拼接两边同类，单字典要包 [ ]）④ max_history 参数化后 chat 里漏 self. 前缀两处——L33 每轮炸/L34 条件分支才炸（**分支内代码也要过变量名**）⑤ "截断没生效"实为算术：1(system)+N=总条数
+- ✅ P1-②（~60min）：pytest 第一课全绿（3 passed）——test_add_message_counts / test_save_load_roundtrip（tmp_path 临时目录）/ test_ensure_system
+  - 前置重构三件：① `if __name__ == "__main__":` 护栏（防 import 执行主程序——9/3 读 judge.py 的知识落地）② ensure_system 收编进类（`not self.history or` 短路先判空——**顺手还清 P0-4 IndexError 债**）③ save/load 加 path 默认参数（测试不覆盖真实 history.json）
+  - 坑史：① 根目录裸跑 pytest → 递归收集 refs/ 教程仓库 24 个测试全炸（collection≠执行；.gitignore 管不了 pytest）→ pytest.ini `testpaths=ai` 钉边界 ② IDE 缓冲区 ≠ 磁盘：改完没 Ctrl+S 重跑，红的一字不差 ③ `len(bot.history == 1)` 括号位置=运算顺序（bool 无 len()）④ chatbot_prompt 字符串 vs 字典（Prompt.py 待修：json.loads 或字典字面量）
+  - pytest.ini：testpaths = ai（test 边界）；pytest 加入依赖待办
+
+**留给明天（9/12 周六下午·里程碑①）**：README + 脱拐 commit/push → 「别人 clone 下来 5 分钟能跑起来」
+
+#### 🚀 闪刷 v0 建成（9/11 深夜插队，用户主动要求；占用国庆 v0 名额）
+- [x] 三板块本地可刷：A 闪刷 35 题（背诵卡自动转换）/ B 模式雷达 23 题（模式识别 17 + 找茬 6）/ C 外部题库 13 题（八股）= 71 题
+- [x] 设计书 → [plan-flash-quiz.md](plan-flash-quiz.md)（WebSearch 校准：FSRS / 牛客合规 / Tailscale 部署）
+- [x] 结构：models / scheduler（莱特纳盒，可换 FSRS）/ grader（AI 判简答，降级自评）/ store（JSON→v1 SQLite）/ importers（背诵卡解析器 + 种子）/ cli；14 测试全绿；pytest.ini testpaths=ai flashquiz
+- [x] **v0.5 Web 版追加**（用户要求前端）：flashquiz/web.py（FastAPI，判分全在服务端防作弊）+ static/index.html（单页 vanilla JS，手机友好）；AI 判分真回路实测 pass；requirements.txt 重写 UTF-8
+- [x] 顺带排障：.env 从 ai/ 收编仓库根（单真相源，chatbot.py/grader.py 显式指向）；Prompt.py 字符串→字典坑修复（用户自己正在做，AI 补完）；fastapi/uvicorn 入 venv
+- [ ] 用户任务：跑一遍三板块真实体验 → 扒源码学习（建议顺序：models → scheduler → cli → recite_md → grader）；README 一节照实写
 
 ### 9/12（六）
-- ☀️ 上午：错题复盘（3 天法：#19/#35 重做验证）
+- ☀️ 上午：错题复盘（3 天法：#19/#35 重做验证）✅ **双题白板一遍对**（#19 同速错位+p2.next 踩尾语义主动选对；#35 门挂范围条件±1 收缩，return right+1 ≡ left——口径提醒：面试统一 return left）
 - 🌙 下午：里程碑①：chatbot 定稿（类 + 异常 + JSON 持久化 + README 三件套）
   - 完成标准：别人 clone 下来 5 分钟能跑起来
 
@@ -99,7 +165,7 @@
 ## 第 3 周（9/14 一 ~ 9/20 日）：embedding 与检索（RAG 前半，全部手写不用框架）
 
 ### 9/14（一）
-- ☀️ #69 x 的平方根 EASY（二分）
+- ☀️ #69 x 的平方根 EASY（二分）（已提前完成）→ 补位：**#92 遮答案复写（三天法到期）**——不看 notebook，白板写出三定位+两刀接缝
 - 🌙 主线：概念日：调 embedding API，把"猫在睡觉/狗在吃饭/飞机起飞"变向量并 print
   - 完成标准：能说出"向量 = 意思的坐标，越近 = 越像"
 
@@ -130,7 +196,7 @@
 
 ### 9/20（日）
 - ☀️ 测验日
-- 🌙 弹性（本周新概念多，留缓冲）
+- 🌙 弹性：落后补这里；没落后 → **加餐：给 chatbot 装 search 工具（ReAct 雏形）**——mini_search.py 的 search() 包成 tool：模型输出 JSON 决策 → 程序执行 → 结果回注 → 循环。约 50 行，串起 9 月全部产出（用户对 Agent 兴趣强烈，提前开 Agent 之门；10 月 LangGraph 即此循环的工业化）
 
 ---
 
@@ -362,4 +428,5 @@
 | 超前完成 | 周末加餐下一周任务，或提前进 LangChain |
 | 某任务卡住 >2 天 | 直接告诉我卡在哪，我拆成更小的步 |
 | 每周日 21:00 前 | 对我说一句本周情况，我重排下周清单 |
+| ⭐ **高强度模式**（9/11 用户要求） | **主线神圣**：当日 🌙 主线未完成前禁碰一切加餐（含硬核题单/默写挑战）；周日弹性槽默认实弹（追赶 + 深度加餐），不再默认休息；主线的深度任务（评测/接缝类）不顺延只拆步 |
 | 原则 | **宁少勿浅：刷题和两个里程碑（chatbot、rag.py）优先级最高，其他都可砍** |
