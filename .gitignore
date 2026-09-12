@@ -7,7 +7,7 @@ __pycache__/
 .venv/
 
 # ══ 运行时数据（程序自己会重写，不属于代码）══
-ai/history.json
+history.json
 flashquiz/data/
 
 # ══ IDE 配置 ══
